@@ -16,9 +16,13 @@ import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
 import { Property } from './entities/property.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @ApiTags('properties')
+@ApiBearerAuth()
 @Controller('properties')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class PropertiesController {
   constructor(private readonly propertiesService: PropertiesService) {}
 

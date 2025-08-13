@@ -15,9 +15,13 @@ import { CreateVerificationRequestDto } from './dto/create-verification-request.
 import { UpdateVerificationRequestDto } from './dto/update-verification-request.dto';
 import { VerificationRequest } from './entities/verification-request.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @ApiTags('verification')
+@ApiBearerAuth()
 @Controller('verification')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class VerificationController {
   constructor(private readonly verificationService: VerificationService) {}
 

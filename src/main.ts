@@ -37,7 +37,7 @@ async function bootstrap() {
     .addTag('agents', 'Real estate agent management endpoints')
     .addTag('verification', 'Property verification endpoints')
     .addTag('payments', 'Payment processing endpoints')
-    .addBearerAuth(
+    /** .addBearerAuth(
       {
         type: 'http',
         scheme: 'bearer',
@@ -47,7 +47,8 @@ async function bootstrap() {
         in: 'header',
       },
       'JWT-auth',
-    )
+    )**/
+   .addBearerAuth()
     .build();
 
   // Create the Swagger document based on the application and configuration

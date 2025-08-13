@@ -1,98 +1,264 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Prop-T Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A comprehensive NestJS backend for the Prop-T real estate property management system.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Features
 
-## Description
+- **Authentication & Authorization**: JWT-based authentication with role-based access control
+- **User Management**: Complete user CRUD operations with profile management
+- **Property Management**: Property listings with advanced filtering and search
+- **Agent Management**: Real estate agent profiles and ratings
+- **Property Verification**: Verification system with payment integration
+- **Payment Processing**: Payment gateway integration for verification fees
+- **API Documentation**: Comprehensive Swagger/OpenAPI documentation
+- **Database**: TypeORM with SQLite (development) and MySQL (production) support
+- **Security**: Input validation, rate limiting, and CORS protection
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🏗️ Architecture
 
-## Project setup
+The application follows a modular architecture with clear separation of concerns:
 
-```bash
-$ npm install
+- **Auth Module**: JWT authentication and user registration
+- **Users Module**: User management and profiles
+- **Properties Module**: Property listings and management
+- **Agents Module**: Real estate agent management
+- **Verification Module**: Property verification requests
+- **Payments Module**: Payment processing and webhooks
+
+## 📋 Prerequisites
+
+- Node.js (v18 or higher)
+- SQLite3 (for local development)
+- MySQL (for production)
+- npm or yarn
+
+## 🛠️ Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd backend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Environment Configuration**
+   Create a `.env` file in the root directory:
+   ```env
+   # Application Configuration
+   NODE_ENV=development
+   PORT=3000
+   FRONTEND_URL=http://localhost:3000
+
+   # JWT Configuration
+   JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+
+   # Payment Gateway Configuration
+   STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
+   STRIPE_WEBHOOK_SECRET=whsec_your_stripe_webhook_secret
+
+   # Email Configuration
+   SENDGRID_API_KEY=your_sendgrid_api_key
+   SENDGRID_FROM_EMAIL=noreply@prop-t.com
+
+   # File Upload Configuration
+   UPLOAD_MAX_SIZE=10485760
+   UPLOAD_DEST=./uploads
+   ```
+
+4. **Database Setup**
+   - **Development**: SQLite database will be automatically created in `app/database.sqlite`
+   - **Production**: Create MySQL database:
+     ```sql
+     CREATE DATABASE prop_t CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+     ```
+
+5. **Run the application**
+   ```bash
+   # Development mode (uses SQLite)
+   npm run start:dev
+
+   # Production build (uses MySQL)
+   npm run build
+   npm run start:prod
+   ```
+
+6. **Seed the database (optional)**
+   ```bash
+   npm run seed
+   ```
+
+## 📚 API Documentation
+
+Once the application is running, you can access the Swagger API documentation at:
+
+```
+http://localhost:3000/api
 ```
 
-## Compile and run the project
+The documentation includes:
+- All available endpoints
+- Request/response schemas
+- Authentication requirements
+- Interactive testing interface
+
+## 🔐 Authentication
+
+The API uses JWT (JSON Web Tokens) for authentication:
+
+1. **Register**: `POST /auth/register`
+2. **Login**: `POST /auth/login`
+3. **Use the returned token**: Include `Authorization: Bearer <token>` in subsequent requests
+
+## 🗄️ Database Entities
+
+### Users
+- Basic user information (email, password, role)
+- Profile details and preferences
+- Role-based access control (user, agent, admin)
+
+### Properties
+- Property listings with detailed information
+- Images, features, and specifications
+- Verification status and ratings
+
+### Agents
+- Real estate agent profiles
+- Agency information and specializations
+- Ratings and experience
+
+### Verification Requests
+- Property verification submissions
+- Document management
+- Status tracking (pending, approved, rejected)
+
+### Payments
+- Payment processing for verification fees
+- Multiple payment methods support
+- Webhook integration for payment status updates
+
+## 🚦 Available Scripts
+
+- `npm run start`: Start the application
+- `npm run start:dev`: Start in development mode with hot reload (SQLite)
+- `npm run build`: Build the application for production
+- `npm run start:prod`: Start the production build (MySQL)
+- `npm run seed`: Populate database with sample data
+- `npm run test`: Run unit tests
+- `npm run test:e2e`: Run end-to-end tests
+- `npm run lint`: Run ESLint
+- `npm run format`: Format code with Prettier
+
+## �� Configuration
+
+### Database
+- **Development**: Uses SQLite with automatic table creation (`synchronize: true`)
+- **Production**: Uses MySQL with manual migrations (`synchronize: false`)
+
+### Rate Limiting
+API endpoints are protected with rate limiting (100 requests per minute).
+
+### CORS
+CORS is enabled with configurable origins for frontend integration.
+
+## 🧪 Testing
 
 ```bash
-# development
-$ npm run start
+# Unit tests
+npm run test
 
-# watch mode
-$ npm run start:dev
+# E2E tests
+npm run test:e2e
 
-# production mode
-$ npm run start:prod
+# Test coverage
+npm run test:cov
 ```
 
-## Run tests
+## 📁 Project Structure
 
-```bash
-# unit tests
-$ npm run test
+```
+src/
+├── auth/                 # Authentication & JWT
+├── users/               # User management
+├── properties/          # Property listings
+├── agents/              # Agent profiles
+├── verification/        # Property verification
+├── payments/            # Payment processing
+├── common/              # Shared utilities
+├── config/              # Configuration
+├── database/            # Database seeding
+└── app.module.ts        # Main application
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+app/
+└── database.sqlite      # SQLite database file (development)
 ```
 
-## Deployment
+## 🔒 Security Features
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+- JWT authentication with configurable expiration
+- Role-based access control
+- Input validation with class-validator
+- Rate limiting to prevent abuse
+- CORS configuration
+- Global exception handling
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 🌐 API Endpoints
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+### Authentication
+- `POST /auth/register` - User registration
+- `POST /auth/login` - User login
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Users
+- `GET /users/profile` - Get current user profile
+- `PATCH /users/profile` - Update current user profile
+- `GET /users/:id` - Get user by ID
+- `POST /users/:id/rate-agent` - Rate an agent
 
-## Resources
+### Properties
+- `GET /properties` - Get all properties with filtering
+- `POST /properties` - Create new property
+- `GET /properties/:id` - Get property by ID
+- `PATCH /properties/:id` - Update property
+- `DELETE /properties/:id` - Delete property
+- `GET /properties/verified` - Get verified properties
+- `GET /properties/my-properties` - Get user's properties
 
-Check out a few resources that may come in handy when working with NestJS:
+### Agents
+- `GET /agents` - Get all agents
+- `POST /agents` - Create agent profile
+- `GET /agents/:id` - Get agent by ID
+- `GET /agents/verified` - Get verified agents
+- `GET /agents/my-profile` - Get current user's agent profile
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Verification
+- `POST /verification` - Submit verification request
+- `GET /verification/my-requests` - Get user's verification requests
+- `GET /verification/pending` - Get pending requests (admin)
+- `POST /verification/:id/approve` - Approve request (admin)
+- `POST /verification/:id/reject` - Reject request (admin)
 
-## Support
+### Payments
+- `POST /payments` - Create payment
+- `GET /payments/stats` - Get payment statistics
+- `POST /payments/:id/process` - Process payment webhook
+- `POST /payments/:id/refund` - Refund payment
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 🤝 Contributing
 
-## Stay in touch
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 📄 License
 
-## License
+This project is licensed under the MIT License.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## 🆘 Support
+
+For support and questions, please open an issue in the repository or contact the development team.

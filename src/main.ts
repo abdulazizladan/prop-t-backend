@@ -1,25 +1,76 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Global exception filter
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  // Global validation pipe
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
+
+  // Global interceptor for consistent response format
+  app.useGlobalInterceptors(new TransformInterceptor());
+
   // Configure Swagger documentation
   const config = new DocumentBuilder()
-    .setTitle('Prop-T documentation') // Set a title for your API documentation
-    .setDescription('Backend services for Prop-T') // Provide a description for the API
-    .setVersion('1.0') // Specify the version of the API
-    .addTag('default') // Add a tag for grouping API endpoints (can be customized)
+    .setTitle('Prop-T API Documentation')
+    .setDescription('Backend services for Prop-T - Real Estate Property Management System')
+    .setVersion('1.0')
+    .addTag('auth', 'Authentication endpoints')
+    .addTag('users', 'User management endpoints')
+    .addTag('properties', 'Property management endpoints')
+    .addTag('agents', 'Real estate agent management endpoints')
+    .addTag('verification', 'Property verification endpoints')
+    .addTag('payments', 'Payment processing endpoints')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT-auth',
+    )
     .build();
 
   // Create the Swagger document based on the application and configuration
   const document = SwaggerModule.createDocument(app, config);
 
-  // Set up the Swagger UI at a specified endpoint (e.g., http://localhost:3000/api)
-  SwaggerModule.setup('api', app, document);
+  // Set up the Swagger UI at a specified endpoint
+  SwaggerModule.setup('api', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  });
 
+  // Enable CORS
+  app.enableCors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    credentials: true,
+  });
 
-  await app.listen(process.env.PORT ?? 3000);
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+  
+  console.log(`🚀 Application is running on: http://localhost:${port}`);
+  console.log(`📚 API Documentation available at: http://localhost:${port}/api`);
 }
+
 bootstrap();
